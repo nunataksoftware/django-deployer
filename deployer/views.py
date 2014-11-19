@@ -4,22 +4,21 @@ import git
 
 import os
 
-
 from django.conf import settings
-
-# Create your views heresettings..
 
 
 def index(request):
-    
+
     output = []
 
     # We update from our repo
     try:
         g = git.cmd.Git(settings.BASE_DIR)
-        output.append({'command': 'git pull', 'output': g.pull(), 'status': 'success'})
+        output.append(
+            {'command': 'git pull', 'output': g.pull(), 'status': 'success'})
     except Exception as e:
-        output.append({'command': 'git pull', 'output': str(e), 'status': 'error'})
+        output.append(
+            {'command': 'git pull', 'output': str(e), 'status': 'error'})
         return render(request, 'deployer/index.html', {'output': output})
     # we install our modules
 
@@ -30,10 +29,11 @@ def index(request):
     try:
         import pip
     except Exception as e:
-        output_pip =  e.strerror + " installing using an alternative method"
+        output_pip = e.strerror + " installing using an alternative method"
 
     else:
-        subprocess.check_call(["pip", 'install', '-r', os.path.join(settings.BASE_DIR, 'requirements.txt')])
+        subprocess.check_call(
+            ["pip", 'install', '-r', os.path.join(settings.BASE_DIR, 'requirements.txt')])
         use_standard_pip = False
         output_pip = "Successfully installed requeriments.txt"
 
@@ -46,24 +46,32 @@ def index(request):
                 output_pip = "There was a problem installing requeriments.txt"
                 status = 'error'
         except Exception as e:
-            output_pip =  e.strerror
+            output_pip = e.strerror
 
     if status == 'error':
         return render(request, 'deployer/index.html', {'output': output})
 
-    output.append({'command': 'pip install -r requirements.txt', 'output': output_pip, 'status': status })
+    output.append({'command': 'pip install -r requirements.txt',
+                   'output': output_pip, 'status': status})
 
     # we sync our database
     try:
-        output.append({'command': 'python manage.py migrate', 'output': subprocess.check_output(['python', os.path.join(settings.BASE_DIR, 'manage.py'), 'migrate' ]), 'status': 'success'})
+        output.append({'command': 'python manage.py migrate', 'output': subprocess.check_output(
+            ['python', os.path.join(settings.BASE_DIR, 'manage.py'), 'migrate']), 'status': 'success'})
     except Exception as e:
-        output.append({'command': 'python manage.py migrate', 'output': e.strerror, 'status': 'error'})
+        output.append(
+            {'command': 'python manage.py migrate', 'output': e.strerror, 'status': 'error'})
         return render(request, 'deployer/index.html', {'output': output})
+
     # restart our server
+    if not settings.DEPLOYER_RESTART_SERVER
+        settings.DEPLOYER_RESTART_SERVER = ["touch", os.path.join(os.path.dirname(BASE_DIR), 'tmp', 'restart.txt')]
     try:
-        subprocess.check_call(["touch", os.path.join(os.path.dirname(settings.BASE_DIR), 'tmp', 'restart.txt')])
-        output.append({'command': 'touch ' + os.path.join(os.path.dirname(settings.BASE_DIR), 'tmp', 'restart.txt') , 'output': 'Server restarted', 'status': 'success'})
+        subprocess.check_call(settings.DEPLOYER_RESTART_SERVER)
+        output.append({'command': 'touch ' + os.path.join(os.path.dirname(settings.BASE_DIR),
+                                                          'tmp', 'restart.txt'), 'output': 'Server restarted', 'status': 'success'})
     except Exception as e:
-        output.append({'command': 'touch ' + os.path.join(os.path.dirname(settings.BASE_DIR), 'tmp', 'restart.txt') , 'output': e.strerror, 'status': 'error'})
+        output.append({'command': 'touch ' + os.path.join(os.path.dirname(settings.BASE_DIR),
+                                                          'tmp', 'restart.txt'), 'output': e.strerror, 'status': 'error'})
 
     return render(request, 'deployer/index.html', {'output': output})

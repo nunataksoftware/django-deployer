@@ -11,7 +11,7 @@ def index(request):
 
     output = []
 
-    # We update from our repo
+    # We update from our repoe
     try:
         g = git.cmd.Git(settings.BASE_DIR)
         output.append(
@@ -29,7 +29,7 @@ def index(request):
     try:
         import pip
     except Exception as e:
-        output_pip = e.strerror + " installing using an alternative method"
+        output_pip = str(e) + " installing using an alternative method"
 
     else:
         subprocess.check_call(
@@ -46,7 +46,7 @@ def index(request):
                 output_pip = "There was a problem installing requeriments.txt"
                 status = 'error'
         except Exception as e:
-            output_pip = e.strerror
+            output_pip = str(e)
 
     if status == 'error':
         return render(request, 'deployer/index.html', {'output': output})
@@ -60,7 +60,7 @@ def index(request):
             ['python', os.path.join(settings.BASE_DIR, 'manage.py'), 'migrate']), 'status': 'success'})
     except Exception as e:
         output.append(
-            {'command': 'python manage.py migrate', 'output': e.strerror, 'status': 'error'})
+            {'command': 'python manage.py migrate', 'output': str(e), 'status': 'error'})
         return render(request, 'deployer/index.html', {'output': output})
 
     # restart our server
@@ -72,6 +72,6 @@ def index(request):
                                                           'tmp', 'restart.txt'), 'output': 'Server restarted', 'status': 'success'})
     except Exception as e:
         output.append({'command': 'touch ' + os.path.join(os.path.dirname(settings.BASE_DIR),
-                                                          'tmp', 'restart.txt'), 'output': e.strerror, 'status': 'error'})
+                                                          'tmp', 'restart.txt'), 'output': str(e), 'status': 'error'})
 
     return render(request, 'deployer/index.html', {'output': output})

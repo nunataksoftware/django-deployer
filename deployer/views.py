@@ -64,7 +64,7 @@ def index(request):
         return render(request, 'deployer/index.html', {'output': output})
 
     # restart our server
-    if not settings.DEPLOYER_RESTART_SERVER
+    if not settings.DEPLOYER_RESTART_SERVER:
         settings.DEPLOYER_RESTART_SERVER = ["touch", os.path.join(os.path.dirname(BASE_DIR), 'tmp', 'restart.txt')]
     try:
         subprocess.check_call(settings.DEPLOYER_RESTART_SERVER)

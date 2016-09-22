@@ -14,17 +14,20 @@ setup(
     version='0.1',
     packages=['deployer'],
     include_package_data=True,
-    license='MIT License', 
+    license='MIT License',
     description='Helper utility to continuosly deploy django projects using an url',
     long_description=README,
     url='https://github.com/nunataksoftware/django-deployer',
     author=u'Guillermo Nuñez',
     author_email='gui.nunez@gmail.com',
+    install_requires=[
+        'GitPython',
+    ],
     classifiers=[
         'Environment :: Web Environment',
         'Framework :: Django',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License', 
+        'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         # Replace these appropriately if you are stuck on Python 2.

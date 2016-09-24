@@ -32,10 +32,14 @@ def index(request):
         output_pip = str(e) + " installing using an alternative method"
 
     else:
-        subprocess.check_call(
-            ["pip", 'install', '-r', os.path.join(settings.BASE_DIR, 'requirements.txt')])
-        use_standard_pip = False
-        output_pip = "Successfully installed requeriments.txt"
+        try:
+            subprocess.check_call(
+                ["pip", 'install', '-r', os.path.join(settings.BASE_DIR, 'requirements.txt'),
+                ])
+            use_standard_pip = False
+            output_pip = "Successfully installed requeriments.txt"
+        except Exception as e:
+            output_pip = str(e) + " pip install failed"
 
     if use_standard_pip:
         try:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 import subprocess
 import git
@@ -49,7 +50,7 @@ def index(request):
             print('usando subprocess para pip')
             output_pip = "Successfully installed requirements.txt"
         except Exception as e:
-            print('subprocess para pip falló')
+            print('subprocess para pip ha fallado')
             output_pip = str(e) + " pip install failed"
     """
     if use_standard_pip:

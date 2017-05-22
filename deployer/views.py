@@ -13,7 +13,7 @@ def index(request):
     output = []
 
 
-    if not settings.DEPLOYER_GIT_DIR:
+    if not hasattr(settings, 'DEPLOYER_GIT_DIR'):
         settings.DEPLOYER_GIT_DIR = settings.BASE_DIR
 
     # We update from our repo

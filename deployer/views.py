@@ -40,19 +40,7 @@ def index(request):
     except Exception as e:
         output_pip = str(e) + " installing using an alternative method"
         use_standard_pip = False
-    """
-    else:
-        try:
-            subprocess.check_call(
-                ["pip", 'install', '-r', os.path.join(settings.BASE_DIR, 'requirements.txt'),
-                ])
-            use_standard_pip = False
-            print('usando subprocess para pip')
-            output_pip = "Successfully installed requirements.txt"
-        except Exception as e:
-            print('subprocess para pip ha fallado')
-            output_pip = str(e) + " pip install failed"
-    """
+
     if use_standard_pip:
         try:
             if pip.main(['install', '-r', os.path.join(settings.BASE_DIR, 'requirements.txt')]) == 0:
